@@ -1,8 +1,21 @@
 import { useState } from "react";
+import {
+  SiAnsible,
+  SiArgo,
+  SiDocker,
+  SiGithub,
+  SiGrafana,
+  SiJenkins,
+  SiKubernetes,
+  SiLinux,
+  SiPrometheus,
+  SiTerraform,
+} from "react-icons/si";
 
 const navItems = [
   ["Bootcamps", "#bootcamps"],
   ["Learning Path", "#learning-path"],
+  ["Tools", "#tools"],
   ["About", "#about"],
   ["Community", "#community"],
 ];
@@ -12,6 +25,25 @@ const stats = [
   ["6+", "Bootcamp Topics"],
   ["2 Days", "Per Bootcamp"],
   ["0 Fluff", "Pure Hands-On"],
+];
+
+const devopsTools = [
+  {
+    name: "Linux",
+    icon: SiLinux,
+    color: "#f5be04",
+    description: "Shell, users, permissions, processes, networking, and system debugging.",
+    featured: true,
+  },
+  { name: "GitHub", icon: SiGithub, color: "#181717", description: "Version control" },
+  { name: "Docker", icon: SiDocker, color: "#2496ed", description: "Containers" },
+  { name: "Kubernetes", icon: SiKubernetes, color: "#326ce5", description: "Orchestration" },
+  { name: "Terraform", icon: SiTerraform, color: "#844fba", description: "Infrastructure as code" },
+  { name: "Argo CD", icon: SiArgo, color: "#ef7b4d", description: "GitOps delivery" },
+  { name: "Jenkins", icon: SiJenkins, color: "#d24939", description: "Automation server" },
+  { name: "Ansible", icon: SiAnsible, color: "#ee0000", description: "Configuration" },
+  { name: "Prometheus", icon: SiPrometheus, color: "#e6522c", description: "Metrics" },
+  { name: "Grafana", icon: SiGrafana, color: "#f46800", description: "Dashboards" },
 ];
 
 const pathCards = [
@@ -151,12 +183,25 @@ function Header() {
 function TerminalVisual() {
   return (
     <div className="relative z-10 flex aspect-square w-full items-center justify-center md:aspect-[4/3]">
-      <div className="absolute right-5 top-6 flex size-14 animate-float items-center justify-center rounded-2xl border border-outline-variant/25 bg-white shadow-ambient sm:right-10 sm:top-10 sm:size-16">
-        <Icon name="cloud" filled className="text-3xl text-secondary" />
-      </div>
-      <div className="absolute bottom-12 left-4 flex size-12 animate-float-reverse items-center justify-center rounded-xl border border-outline-variant/25 bg-white shadow-ambient sm:bottom-20 sm:left-10">
-        <Icon name="dns" filled className="text-2xl text-tertiary" />
-      </div>
+      <FloatingLogo
+        icon={SiKubernetes}
+        label="Kubernetes"
+        color="#326ce5"
+        className="right-5 top-6 size-16 sm:right-10 sm:top-8 sm:size-[74px]"
+      />
+      <FloatingLogo
+        icon={SiDocker}
+        label="Docker"
+        color="#2496ed"
+        className="bottom-12 left-4 size-14 sm:bottom-20 sm:left-8 sm:size-16"
+        reverse
+      />
+      <FloatingLogo
+        icon={SiTerraform}
+        label="Terraform"
+        color="#844fba"
+        className="bottom-4 right-12 hidden size-12 sm:flex"
+      />
 
       <div className="terminal-tilt group relative w-full max-w-md overflow-hidden rounded-2xl border border-gray-800 bg-[#111827] shadow-2xl transition-transform duration-700 ease-out">
         <div className="flex items-center border-b border-gray-800 bg-gray-900 px-4 py-3">
@@ -184,6 +229,17 @@ function TerminalVisual() {
         </div>
         <div className="pointer-events-none absolute inset-0 bg-gradient-to-tr from-primary/10 to-transparent" />
       </div>
+    </div>
+  );
+}
+
+function FloatingLogo({ icon: Logo, label, color, className = "", reverse = false }) {
+  return (
+    <div
+      aria-label={label}
+      className={`absolute ${reverse ? "animate-float-reverse" : "animate-float"} flex items-center justify-center rounded-2xl border border-outline-variant/25 bg-white/90 shadow-ambient backdrop-blur ${className}`}
+    >
+      <Logo aria-hidden="true" className="text-[48px]" style={{ color }} />
     </div>
   );
 }
@@ -265,6 +321,87 @@ function Stats() {
         </div>
       </div>
     </section>
+  );
+}
+
+function DevOpsTools() {
+  const [featuredTool, ...toolGrid] = devopsTools;
+  const FeaturedLogo = featuredTool.icon;
+
+  return (
+    <section id="tools" className="border-b border-outline-variant/30 bg-surface/70 py-20">
+      <div className="mx-auto max-w-content px-4 md:px-16">
+        <div className="mb-10 flex flex-col justify-between gap-4 md:flex-row md:items-end">
+          <div className="max-w-2xl">
+            <p className="mb-3 font-mono text-xs font-semibold uppercase text-primary">
+              DevOps Toolchain
+            </p>
+            <h2 className="font-headline text-4xl font-bold text-on-surface md:text-5xl">
+              Practice with tools used in real infrastructure work.
+            </h2>
+          </div>
+          <p className="max-w-md text-base leading-7 text-on-surface-variant">
+            The visual stack stays technical and practical: operating systems, containers, GitOps,
+            pipelines, infrastructure as code, and observability.
+          </p>
+        </div>
+
+        <div className="grid gap-6 lg:grid-cols-[1.1fr_1.9fr]">
+          <article className="glass-panel group relative overflow-hidden rounded-2xl border-2 border-primary/45 p-8 shadow-glow">
+            <div className="absolute -right-16 -top-16 size-44 rounded-full bg-primary-container/20 blur-3xl" />
+            <div className="relative flex h-full min-h-[280px] flex-col justify-between gap-10">
+              <div className="flex items-start justify-between gap-6">
+                <div>
+                  <p className="mb-3 font-mono text-xs font-semibold uppercase text-primary">
+                    Foundation
+                  </p>
+                  <h3 className="font-headline text-4xl font-bold text-on-surface">
+                    {featuredTool.name}
+                  </h3>
+                </div>
+                <div className="flex size-28 shrink-0 items-center justify-center rounded-2xl border border-outline-variant/30 bg-white shadow-ambient sm:size-32">
+                  <FeaturedLogo
+                    aria-hidden="true"
+                    className="text-[76px] sm:text-[88px]"
+                    style={{ color: featuredTool.color }}
+                  />
+                </div>
+              </div>
+              <p className="max-w-lg text-lg leading-8 text-on-surface-variant">
+                {featuredTool.description}
+              </p>
+            </div>
+          </article>
+
+          <div className="grid grid-cols-2 gap-4 md:grid-cols-3">
+            {toolGrid.map((tool) => (
+              <ToolTile key={tool.name} tool={tool} />
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function ToolTile({ tool }) {
+  const Logo = tool.icon;
+
+  return (
+    <article className="group flex min-h-40 flex-col justify-between rounded-2xl border border-outline-variant/30 bg-white/75 p-5 shadow-ambient backdrop-blur transition-all duration-300 hover:-translate-y-1 hover:border-primary/40 hover:bg-white">
+      <div className="flex items-start justify-between gap-3">
+        <div className="flex size-16 items-center justify-center rounded-xl bg-surface-container-low transition-colors group-hover:bg-surface-container">
+          <Logo aria-hidden="true" className="text-[40px]" style={{ color: tool.color }} />
+        </div>
+        <span className="size-2 rounded-full bg-primary-container opacity-0 transition-opacity group-hover:opacity-100" />
+      </div>
+      <div>
+        <h3 className="mb-1 font-headline text-xl font-semibold text-on-surface">{tool.name}</h3>
+        <p className="font-mono text-xs font-semibold uppercase text-on-surface-variant">
+          {tool.description}
+        </p>
+      </div>
+    </article>
   );
 }
 
@@ -457,6 +594,7 @@ export default function App() {
       <main>
         <Hero />
         <Stats />
+        <DevOpsTools />
         <LearningPath />
         <Bootcamp />
         <Instructor />
