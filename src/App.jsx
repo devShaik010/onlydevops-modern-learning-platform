@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   SiAnsible,
   SiArgo,
@@ -96,6 +96,20 @@ const included = [
 
 const footerLinks = ["Terms", "Privacy", "Syllabus", "Mentors", "Status", "Support"];
 
+function getInitialTheme() {
+  if (typeof window === "undefined") {
+    return "light";
+  }
+
+  const savedTheme = window.localStorage.getItem("onlydevops-theme");
+
+  if (savedTheme === "dark" || savedTheme === "light") {
+    return savedTheme;
+  }
+
+  return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+}
+
 function Icon({ name, className = "", filled = false }) {
   return (
     <span
@@ -108,7 +122,30 @@ function Icon({ name, className = "", filled = false }) {
   );
 }
 
-function Header() {
+function ThemeToggle({ theme, onToggle, compact = false }) {
+  const isDark = theme === "dark";
+
+  return (
+    <button
+      type="button"
+      aria-label={`Switch to ${isDark ? "light" : "dark"} mode`}
+      aria-pressed={isDark}
+      onClick={onToggle}
+      className={`inline-flex items-center justify-center rounded-full border border-outline-variant/50 bg-surface-container-lowest/70 text-on-surface shadow-sm backdrop-blur transition-all hover:border-primary/50 hover:text-primary ${
+        compact ? "size-11" : "h-11 gap-2 px-3 sm:px-4"
+      }`}
+    >
+      <Icon name={isDark ? "light_mode" : "dark_mode"} filled className="text-[20px]" />
+      {!compact && (
+        <span className="hidden font-mono text-xs font-semibold uppercase sm:inline">
+          {isDark ? "Light" : "Dark"}
+        </span>
+      )}
+    </button>
+  );
+}
+
+function Header({ theme, onToggleTheme }) {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
@@ -135,6 +172,7 @@ function Header() {
         </div>
 
         <div className="flex items-center gap-3">
+          <ThemeToggle theme={theme} onToggle={onToggleTheme} />
           <a
             href="#community"
             className="hidden rounded-full border border-primary px-6 py-2.5 font-mono text-xs font-semibold uppercase text-primary transition-all hover:bg-primary hover:text-on-primary md:inline-flex"
@@ -156,6 +194,12 @@ function Header() {
       {isOpen && (
         <div className="border-t border-outline-variant/30 bg-surface/95 px-4 py-4 backdrop-blur-xl md:hidden">
           <div className="mx-auto flex max-w-content flex-col gap-2">
+            <div className="mb-2 flex items-center justify-between rounded-xl border border-outline-variant/30 bg-surface-container-lowest/70 px-3 py-3">
+              <span className="font-mono text-xs font-semibold uppercase text-on-surface-variant">
+                Theme
+              </span>
+              <ThemeToggle theme={theme} onToggle={onToggleTheme} compact />
+            </div>
             {navItems.map(([label, href]) => (
               <a
                 key={label}
@@ -237,7 +281,7 @@ function FloatingLogo({ icon: Logo, label, color, className = "", reverse = fals
   return (
     <div
       aria-label={label}
-      className={`absolute z-20 ${reverse ? "animate-float-reverse" : "animate-float"} flex items-center justify-center rounded-2xl border border-outline-variant/25 bg-white/90 shadow-ambient backdrop-blur ${className}`}
+      className={`absolute z-20 ${reverse ? "animate-float-reverse" : "animate-float"} flex items-center justify-center rounded-2xl border border-outline-variant/25 bg-surface-container-lowest/90 shadow-ambient backdrop-blur ${className}`}
     >
       <Logo aria-hidden="true" className="text-[48px]" style={{ color }} />
     </div>
@@ -359,7 +403,7 @@ function DevOpsTools() {
                     {featuredTool.name}
                   </h3>
                 </div>
-                <div className="flex size-28 shrink-0 items-center justify-center rounded-2xl border border-outline-variant/30 bg-white shadow-ambient sm:size-32">
+                <div className="flex size-28 shrink-0 items-center justify-center rounded-2xl border border-outline-variant/30 bg-surface-container-lowest shadow-ambient sm:size-32">
                   <FeaturedLogo
                     aria-hidden="true"
                     className="text-[76px] sm:text-[88px]"
@@ -388,7 +432,7 @@ function ToolTile({ tool }) {
   const Logo = tool.icon;
 
   return (
-    <article className="group flex min-h-40 flex-col justify-between rounded-2xl border border-outline-variant/30 bg-white/75 p-5 shadow-ambient backdrop-blur transition-all duration-300 hover:-translate-y-1 hover:border-primary/40 hover:bg-white">
+    <article className="group flex min-h-40 flex-col justify-between rounded-2xl border border-outline-variant/30 bg-surface-container-lowest/75 p-5 shadow-ambient backdrop-blur transition-all duration-300 hover:-translate-y-1 hover:border-primary/40 hover:bg-surface-container-lowest">
       <div className="flex items-start justify-between gap-3">
         <div className="flex size-16 items-center justify-center rounded-xl bg-surface-container-low transition-colors group-hover:bg-surface-container">
           <Logo aria-hidden="true" className="text-[40px]" style={{ color: tool.color }} />
@@ -514,7 +558,7 @@ function Instructor() {
     <section id="about" className="py-24">
       <div className="mx-auto flex max-w-content flex-col items-center gap-16 px-4 md:flex-row md:px-16">
         <div className="relative flex size-48 flex-shrink-0 items-center justify-center overflow-hidden rounded-full border-4 border-surface bg-surface-container-highest shadow-xl md:size-64">
-          <div className="absolute inset-8 rounded-full bg-gradient-to-br from-white to-surface-container" />
+          <div className="absolute inset-8 rounded-full bg-gradient-to-br from-surface-container-lowest to-surface-container" />
           <Icon name="person" className="relative text-7xl text-outline-variant" />
         </div>
         <div className="text-center md:text-left">
@@ -588,9 +632,23 @@ function Footer() {
 }
 
 export default function App() {
+  const [theme, setTheme] = useState(getInitialTheme);
+
+  useEffect(() => {
+    const root = document.documentElement;
+
+    root.classList.toggle("dark", theme === "dark");
+    root.style.colorScheme = theme;
+    window.localStorage.setItem("onlydevops-theme", theme);
+  }, [theme]);
+
+  const toggleTheme = () => {
+    setTheme((currentTheme) => (currentTheme === "dark" ? "light" : "dark"));
+  };
+
   return (
-    <div className="blueprint-grid min-h-screen bg-background text-on-surface selection:bg-primary-container selection:text-on-primary-container">
-      <Header />
+    <div className="blueprint-grid min-h-screen bg-background text-on-surface transition-colors duration-300 selection:bg-primary-container selection:text-on-primary-container">
+      <Header theme={theme} onToggleTheme={toggleTheme} />
       <main>
         <Hero />
         <Stats />
