@@ -24,6 +24,15 @@ npm run build
 
 The production output is generated in `dist/`.
 
+## Deployment
+
+This project is configured for Vercel.
+
+- Framework preset: Vite
+- Install command: `npm ci`
+- Build command: `npm run build`
+- Output directory: `dist`
+
 ## Project Structure
 
 - `src/App.jsx` - landing page sections and UI
