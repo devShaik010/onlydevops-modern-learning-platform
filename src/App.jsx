@@ -187,23 +187,23 @@ function TerminalVisual() {
         icon={SiKubernetes}
         label="Kubernetes"
         color="#326ce5"
-        className="right-5 top-6 size-16 sm:right-10 sm:top-8 sm:size-[74px]"
+        className="right-0 top-2 size-16 sm:-right-2 sm:top-4 sm:size-[74px] lg:-right-5"
       />
       <FloatingLogo
         icon={SiDocker}
         label="Docker"
         color="#2496ed"
-        className="bottom-12 left-4 size-14 sm:bottom-20 sm:left-8 sm:size-16"
+        className="bottom-10 left-0 size-14 sm:bottom-16 sm:-left-2 sm:size-16 lg:-left-4"
         reverse
       />
       <FloatingLogo
         icon={SiTerraform}
         label="Terraform"
         color="#844fba"
-        className="bottom-4 right-12 hidden size-12 sm:flex"
+        className="bottom-0 right-10 hidden size-12 sm:flex lg:right-16"
       />
 
-      <div className="terminal-tilt group relative w-full max-w-md overflow-hidden rounded-2xl border border-gray-800 bg-[#111827] shadow-2xl transition-transform duration-700 ease-out">
+      <div className="terminal-tilt group relative z-10 w-full max-w-md overflow-hidden rounded-2xl border border-gray-800 bg-[#111827] shadow-2xl transition-transform duration-700 ease-out">
         <div className="flex items-center border-b border-gray-800 bg-gray-900 px-4 py-3">
           <div className="flex gap-2">
             <span className="size-3 rounded-full bg-red-500" />
@@ -237,7 +237,7 @@ function FloatingLogo({ icon: Logo, label, color, className = "", reverse = fals
   return (
     <div
       aria-label={label}
-      className={`absolute ${reverse ? "animate-float-reverse" : "animate-float"} flex items-center justify-center rounded-2xl border border-outline-variant/25 bg-white/90 shadow-ambient backdrop-blur ${className}`}
+      className={`absolute z-20 ${reverse ? "animate-float-reverse" : "animate-float"} flex items-center justify-center rounded-2xl border border-outline-variant/25 bg-white/90 shadow-ambient backdrop-blur ${className}`}
     >
       <Logo aria-hidden="true" className="text-[48px]" style={{ color }} />
     </div>
