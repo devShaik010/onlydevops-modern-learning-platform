@@ -1,0 +1,99 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    color: #131b2e;
+    background: #faf8ff;
+    font-synthesis: none;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    min-width: 320px;
+    min-height: 100vh;
+    margin: 0;
+    font-family: Inter, system-ui, sans-serif;
+  }
+
+  button,
+  a {
+    -webkit-tap-highlight-color: transparent;
+  }
+}
+
+@layer components {
+  .blueprint-grid {
+    background-size: 32px 32px;
+    background-image:
+      linear-gradient(to right, rgba(108, 122, 114, 0.1) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(108, 122, 114, 0.1) 1px, transparent 1px);
+  }
+
+  .hero-glow {
+    background:
+      radial-gradient(circle at 70% 35%, rgba(0, 200, 150, 0.16) 0%, transparent 34%),
+      radial-gradient(circle at 28% 20%, rgba(49, 107, 243, 0.1) 0%, transparent 36%);
+  }
+
+  .glass-panel {
+    background: rgba(255, 255, 255, 0.72);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+  }
+
+  .material-symbols-outlined {
+    font-family: "Material Symbols Outlined";
+    font-weight: normal;
+    font-style: normal;
+    font-size: 24px;
+    line-height: 1;
+    letter-spacing: normal;
+    text-transform: none;
+    display: inline-block;
+    white-space: nowrap;
+    word-wrap: normal;
+    direction: ltr;
+    -webkit-font-feature-settings: "liga";
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .animate-float {
+    animation: float 4s ease-in-out infinite alternate;
+  }
+
+  .animate-float-reverse {
+    animation: float 5s ease-in-out infinite alternate-reverse;
+  }
+
+  .terminal-tilt {
+    transform: perspective(1000px) rotateY(0deg) rotateX(0deg);
+  }
+
+  @media (min-width: 1024px) {
+    .terminal-tilt {
+      transform: perspective(1000px) rotateY(-6deg) rotateX(3deg);
+    }
+
+    .terminal-tilt:hover {
+      transform: perspective(1000px) rotateY(0deg) rotateX(0deg);
+    }
+  }
+}
+
+@keyframes float {
+  from {
+    transform: translateY(0);
+  }
+
+  to {
+    transform: translateY(-14px);
+  }
+}
