@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   SiAnsible,
   SiArgo,
@@ -13,17 +13,17 @@ import {
 } from "react-icons/si";
 
 const navItems = [
-  ["Bootcamps", "#bootcamps"],
-  ["Learning Path", "#learning-path"],
-  ["Tools", "#tools"],
-  ["About", "#about"],
-  ["Community", "#community"],
+  ["Roadmap", "/roadmap", true],
+  ["Learning Path", "/#learning-path"],
+  ["Tools", "/#tools"],
+  ["About", "/#about"],
+  ["Community", "/#community"],
 ];
 
 const stats = [
   ["250+", "Learners Trained"],
-  ["6+", "Bootcamp Topics"],
-  ["2 Days", "Per Bootcamp"],
+  ["6+", "Core Tracks"],
+  ["Roadmap", "Always Available"],
   ["0 Fluff", "Pure Hands-On"],
 ];
 
@@ -49,20 +49,20 @@ const devopsTools = [
 const pathCards = [
   {
     title: "Linux + Networking",
-    body: "The bedrock of all DevOps engineering. Master the command line and protocols.",
+    body: "Build the command-line confidence and network intuition every real DevOps engineer needs.",
     icon: "terminal",
-    level: "Fundamental",
+    level: "Foundation",
     active: true,
   },
   {
     title: "Shell Scripting + Git",
-    body: "Automate routine tasks and manage infrastructure code versions effectively.",
+    body: "Automate routine work and manage infrastructure changes with clean version control habits.",
     icon: "code_blocks",
     level: "Core",
   },
   {
     title: "Docker",
-    body: "Containerize applications for consistent environments across the pipeline.",
+    body: "Package applications into consistent, portable runtime environments.",
     icon: "view_in_ar",
     level: "Intermediate",
   },
@@ -74,27 +74,132 @@ const pathCards = [
   },
   {
     title: "Kubernetes",
-    body: "Orchestrate container deployments at massive scale.",
+    body: "Orchestrate container deployments at serious scale with confidence.",
     icon: "hub",
     level: "Advanced",
   },
   {
     title: "AWS + Terraform",
-    body: "Provision and manage cloud infrastructure as code.",
+    body: "Provision and manage cloud infrastructure as code in repeatable workflows.",
     icon: "cloud",
     level: "Advanced",
   },
 ];
 
 const included = [
-  "Live Zoom Sessions (Weekend)",
-  "Hands-on Lab Exercises",
-  "Lifetime Recording Access",
-  "Private Community Group",
-  "Certificate of Completion",
+  "Visual roadmap with real tool progression",
+  "Hands-on sequence from Linux to Kubernetes",
+  "Milestone-based learning checkpoints",
+  "Project-first guidance, not tutorial spam",
+  "Community-ready next steps",
 ];
 
-const footerLinks = ["Terms", "Privacy", "Syllabus", "Mentors", "Status", "Support"];
+const footerLinks = ["Roadmap", "Learning Path", "Mentors", "Status", "Support"];
+
+const roadmapMilestones = [
+  {
+    title: "Ground Zero",
+    subtitle: "Linux + Networking",
+    level: "Stage 01",
+    duration: "2-3 weeks",
+    status: "Start here",
+    color: "from-amber-400/30 via-primary/10 to-transparent",
+    icon: SiLinux,
+    iconColor: "#f5be04",
+    summary: "Own the shell, understand filesystems, services, ports, DNS, HTTP, SSH, and how packets actually move.",
+    achievements: [
+      "Navigate Linux without fear",
+      "Debug ports, processes, permissions, and logs",
+      "Explain what happens from browser request to server response",
+    ],
+    tools: ["Linux", "SSH", "Bash", "Networking"],
+  },
+  {
+    title: "Automation Lane",
+    subtitle: "Shell Scripting + GitHub",
+    level: "Stage 02",
+    duration: "2 weeks",
+    status: "Build momentum",
+    color: "from-sky-400/30 via-secondary/10 to-transparent",
+    icon: SiGithub,
+    iconColor: "#181717",
+    summary: "Turn repeated terminal work into scripts, structure projects in Git, and ship changes with clean commits and branches.",
+    achievements: [
+      "Write useful bash automation",
+      "Manage repos, branches, and PR workflows",
+      "Document commands like an engineer, not a student",
+    ],
+    tools: ["Bash", "Git", "GitHub", "Markdown"],
+  },
+  {
+    title: "Container Curve",
+    subtitle: "Docker",
+    level: "Stage 03",
+    duration: "1-2 weeks",
+    status: "Package everything",
+    color: "from-cyan-400/30 via-primary/10 to-transparent",
+    icon: SiDocker,
+    iconColor: "#2496ed",
+    summary: "Build images, understand layers, optimize Dockerfiles, and run production-like workloads locally.",
+    achievements: [
+      "Create clean Dockerfiles",
+      "Use Compose for multi-service setups",
+      "Debug build issues and container networking",
+    ],
+    tools: ["Docker", "Docker Compose", "Images", "Volumes"],
+  },
+  {
+    title: "Delivery Bridge",
+    subtitle: "CI/CD + Jenkins + GitHub Actions",
+    level: "Stage 04",
+    duration: "2 weeks",
+    status: "Automate releases",
+    color: "from-rose-400/30 via-secondary/10 to-transparent",
+    icon: SiJenkins,
+    iconColor: "#d24939",
+    summary: "Move from manual deployments to repeatable pipelines with testing, linting, build artifacts, and deployment stages.",
+    achievements: [
+      "Design reliable CI pipelines",
+      "Understand runners, secrets, and artifacts",
+      "Ship the same way every time",
+    ],
+    tools: ["Jenkins", "GitHub Actions", "Artifacts", "Pipelines"],
+  },
+  {
+    title: "Cluster Highway",
+    subtitle: "Kubernetes + GitOps",
+    level: "Stage 05",
+    duration: "3 weeks",
+    status: "Scale systems",
+    color: "from-indigo-400/30 via-primary/10 to-transparent",
+    icon: SiKubernetes,
+    iconColor: "#326ce5",
+    summary: "Learn pods, deployments, services, ingress, Helm thinking, and how GitOps removes deployment chaos.",
+    achievements: [
+      "Read and write Kubernetes manifests",
+      "Debug workloads with kubectl and logs",
+      "Understand GitOps flows with Argo CD mindset",
+    ],
+    tools: ["Kubernetes", "kubectl", "Helm", "Argo CD"],
+  },
+  {
+    title: "Cloud Summit",
+    subtitle: "AWS + Terraform + Observability",
+    level: "Stage 06",
+    duration: "3-4 weeks",
+    status: "Operate for real",
+    color: "from-emerald-400/30 via-primary/10 to-transparent",
+    icon: SiTerraform,
+    iconColor: "#ff9900",
+    summary: "Provision cloud infrastructure, standardize environments, and monitor systems with metrics, dashboards, and alerting.",
+    achievements: [
+      "Provision infra as code",
+      "Create production-shaped environments",
+      "Measure health with Prometheus and Grafana",
+    ],
+    tools: ["AWS", "Terraform", "Prometheus", "Grafana"],
+  },
+];
 
 function getInitialTheme() {
   if (typeof window === "undefined") {
@@ -108,6 +213,26 @@ function getInitialTheme() {
   }
 
   return "light";
+}
+
+function getCurrentPath() {
+  if (typeof window === "undefined") {
+    return "/";
+  }
+
+  return window.location.pathname || "/";
+}
+
+function normalizePath(path) {
+  if (!path) {
+    return "/";
+  }
+
+  return path.replace(/\/$/, "") || "/";
+}
+
+function isRoadmapPath(pathname) {
+  return normalizePath(pathname) === "/roadmap";
 }
 
 function Icon({ name, className = "", filled = false }) {
@@ -145,36 +270,53 @@ function ThemeToggle({ theme, onToggle, compact = false }) {
   );
 }
 
-function Header({ theme, onToggleTheme }) {
+function Header({ theme, onToggleTheme, pathname }) {
   const [isOpen, setIsOpen] = useState(false);
+
+  const isActiveLink = (href) => {
+    if (href === "/roadmap") {
+      return isRoadmapPath(pathname);
+    }
+
+    return !isRoadmapPath(pathname) && href.startsWith("/#");
+  };
 
   return (
     <header className="sticky top-0 z-50 border-b border-outline-variant/30 bg-surface/75 shadow-sm backdrop-blur-xl">
       <nav className="mx-auto flex h-20 max-w-content items-center justify-between px-4 md:px-16">
         <a
-          href="#top"
+          href="/"
           className="flex items-center gap-2 font-headline text-2xl font-bold text-on-surface transition-opacity hover:opacity-80"
         >
           <Icon name="terminal" filled className="text-primary" />
           OnlyDevOps
         </a>
 
-        <div className="hidden items-center gap-8 md:flex">
-          {navItems.map(([label, href]) => (
-            <a
-              key={label}
-              href={href}
-              className="font-mono text-xs font-semibold uppercase text-on-surface-variant transition-colors hover:text-primary"
-            >
-              {label}
-            </a>
-          ))}
+        <div className="hidden items-center gap-4 md:flex">
+          {navItems.map(([label, href, highlighted]) => {
+            const active = isActiveLink(href);
+            const classes = highlighted
+              ? `rounded-full border px-4 py-2 font-mono text-xs font-semibold uppercase transition-all ${
+                  active
+                    ? "border-primary bg-primary text-on-primary shadow-glow"
+                    : "border-primary/50 bg-primary/10 text-primary hover:border-primary hover:bg-primary hover:text-on-primary"
+                }`
+              : `font-mono text-xs font-semibold uppercase transition-colors ${
+                  active ? "text-primary" : "text-on-surface-variant hover:text-primary"
+                }`;
+
+            return (
+              <a key={label} href={href} className={classes}>
+                {label}
+              </a>
+            );
+          })}
         </div>
 
         <div className="flex items-center gap-3">
           <ThemeToggle theme={theme} onToggle={onToggleTheme} />
           <a
-            href="#community"
+            href={isRoadmapPath(pathname) ? "/#community" : "#community"}
             className="hidden rounded-full border border-primary px-6 py-2.5 font-mono text-xs font-semibold uppercase text-primary transition-all hover:bg-primary hover:text-on-primary md:inline-flex"
           >
             Join Community
@@ -195,23 +337,25 @@ function Header({ theme, onToggleTheme }) {
         <div className="border-t border-outline-variant/30 bg-surface/95 px-4 py-4 backdrop-blur-xl md:hidden">
           <div className="mx-auto flex max-w-content flex-col gap-2">
             <div className="mb-2 flex items-center justify-between rounded-xl border border-outline-variant/30 bg-surface-container-lowest/70 px-3 py-3">
-              <span className="font-mono text-xs font-semibold uppercase text-on-surface-variant">
-                Theme
-              </span>
+              <span className="font-mono text-xs font-semibold uppercase text-on-surface-variant">Theme</span>
               <ThemeToggle theme={theme} onToggle={onToggleTheme} compact />
             </div>
-            {navItems.map(([label, href]) => (
+            {navItems.map(([label, href, highlighted]) => (
               <a
                 key={label}
                 href={href}
                 onClick={() => setIsOpen(false)}
-                className="rounded-lg px-3 py-3 font-mono text-sm font-semibold uppercase text-on-surface-variant hover:bg-surface-container-low hover:text-primary"
+                className={`rounded-lg px-3 py-3 font-mono text-sm font-semibold uppercase ${
+                  highlighted
+                    ? "bg-primary/10 text-primary"
+                    : "text-on-surface-variant hover:bg-surface-container-low hover:text-primary"
+                }`}
               >
                 {label}
               </a>
             ))}
             <a
-              href="#community"
+              href={isRoadmapPath(pathname) ? "/#community" : "#community"}
               onClick={() => setIsOpen(false)}
               className="mt-2 inline-flex items-center justify-center rounded-full bg-primary px-6 py-3 font-mono text-xs font-semibold uppercase text-on-primary"
             >
@@ -324,22 +468,22 @@ function Hero() {
               <span className="text-primary">The Real Way</span>
             </h1>
             <p className="max-w-xl text-lg leading-8 text-on-surface-variant">
-              Weekend bootcamps. Hands-on labs. Real production knowledge. Stop watching tutorials and
-              start building infrastructure.
+              Hands-on learning paths, real infrastructure thinking, and a visual roadmap that shows
+              exactly what to learn next.
             </p>
           </div>
           <div className="mt-2 flex w-full flex-col gap-4 sm:w-auto sm:flex-row">
             <a
-              href="#community"
+              href="/roadmap"
               className="inline-flex items-center justify-center rounded-full bg-primary px-8 py-4 font-mono text-xs font-semibold uppercase text-on-primary shadow-glow transition-all hover:scale-[1.02]"
             >
-              Join Free Community
+              Explore Roadmap
             </a>
             <a
-              href="#bootcamps"
+              href="#community"
               className="inline-flex items-center justify-center rounded-full border border-outline bg-transparent px-8 py-4 font-mono text-xs font-semibold uppercase text-on-surface transition-colors hover:bg-surface-container-low"
             >
-              View Bootcamps
+              Join Community
             </a>
           </div>
         </div>
@@ -377,9 +521,7 @@ function DevOpsTools() {
       <div className="mx-auto max-w-content px-4 md:px-16">
         <div className="mb-10 flex flex-col justify-between gap-4 md:flex-row md:items-end">
           <div className="max-w-2xl">
-            <p className="mb-3 font-mono text-xs font-semibold uppercase text-primary">
-              DevOps Toolchain
-            </p>
+            <p className="mb-3 font-mono text-xs font-semibold uppercase text-primary">DevOps Toolchain</p>
             <h2 className="font-headline text-4xl font-bold text-on-surface md:text-5xl">
               Practice with tools used in real infrastructure work.
             </h2>
@@ -396,12 +538,8 @@ function DevOpsTools() {
             <div className="relative flex h-full min-h-[280px] flex-col justify-between gap-10">
               <div className="flex items-start justify-between gap-6">
                 <div>
-                  <p className="mb-3 font-mono text-xs font-semibold uppercase text-primary">
-                    Foundation
-                  </p>
-                  <h3 className="font-headline text-4xl font-bold text-on-surface">
-                    {featuredTool.name}
-                  </h3>
+                  <p className="mb-3 font-mono text-xs font-semibold uppercase text-primary">Foundation</p>
+                  <h3 className="font-headline text-4xl font-bold text-on-surface">{featuredTool.name}</h3>
                 </div>
                 <div className="flex size-28 shrink-0 items-center justify-center rounded-2xl border border-outline-variant/30 bg-surface-container-lowest shadow-ambient sm:size-32">
                   <FeaturedLogo
@@ -411,9 +549,7 @@ function DevOpsTools() {
                   />
                 </div>
               </div>
-              <p className="max-w-lg text-lg leading-8 text-on-surface-variant">
-                {featuredTool.description}
-              </p>
+              <p className="max-w-lg text-lg leading-8 text-on-surface-variant">{featuredTool.description}</p>
             </div>
           </article>
 
@@ -441,9 +577,7 @@ function ToolTile({ tool }) {
       </div>
       <div>
         <h3 className="mb-1 font-headline text-xl font-semibold text-on-surface">{tool.name}</h3>
-        <p className="font-mono text-xs font-semibold uppercase text-on-surface-variant">
-          {tool.description}
-        </p>
+        <p className="font-mono text-xs font-semibold uppercase text-on-surface-variant">{tool.description}</p>
       </div>
     </article>
   );
@@ -485,7 +619,7 @@ function PathCard({ title, body, icon, level, active = false }) {
       {active && (
         <div className="absolute right-0 top-0 p-4">
           <span className="rounded-full bg-primary-container px-2 py-1 font-mono text-[10px] font-semibold uppercase text-on-primary-container">
-            Active
+            Foundation
           </span>
         </div>
       )}
@@ -505,43 +639,48 @@ function PathCard({ title, body, icon, level, active = false }) {
   );
 }
 
-function Bootcamp() {
+function RoadmapCallout() {
   return (
-    <section id="bootcamps" className="bg-surface-container-low py-24">
+    <section className="bg-surface-container-low py-24">
       <div className="mx-auto max-w-content px-4 md:px-16">
-        <div className="flex flex-col overflow-hidden rounded-2xl border border-outline-variant/30 bg-surface shadow-ambient lg:flex-row">
-          <div className="flex-grow border-b border-outline-variant/30 p-8 lg:border-b-0 lg:border-r lg:p-12">
-            <div className="mb-6 inline-flex items-center gap-2 rounded bg-secondary-container/20 px-3 py-1 font-mono text-xs font-semibold uppercase text-secondary">
-              Next Bootcamp
+        <div className="grid gap-8 rounded-[32px] border border-outline-variant/30 bg-surface p-8 shadow-ambient md:grid-cols-[1.15fr_0.85fr] md:p-12">
+          <div>
+            <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-primary/25 bg-primary/10 px-3 py-1.5 font-mono text-xs font-semibold uppercase text-primary">
+              <Icon name="route" filled className="text-base" />
+              Roadmap available now
             </div>
-            <h2 className="mb-4 font-headline text-4xl font-bold text-on-surface">
-              Linux + Networking Bootcamp
+            <h2 className="mb-4 font-headline text-4xl font-bold text-on-surface md:text-5xl">
+              No live bootcamp right now — follow the roadmap instead.
             </h2>
-            <p className="mb-8 max-w-2xl text-base leading-7 text-on-surface-variant">
-              Stop memorizing commands. Start understanding the operating system and how traffic flows.
-              This intensive weekend bootcamp covers the essential foundation every serious DevOps
-              engineer needs.
+            <p className="max-w-2xl text-base leading-8 text-on-surface-variant">
+              The current Linux + Networking bootcamp promo has been retired for now. Instead of pushing an
+              inactive event, OnlyDevOps now guides learners through a clean, interactive roadmap from Linux
+              basics to Kubernetes, AWS, Terraform, and observability.
             </p>
-            <div className="mb-8 flex items-baseline gap-4">
-              <span className="font-headline text-4xl font-bold text-on-surface">₹399</span>
-              <span className="text-base text-outline">/ $10</span>
+            <div className="mt-8 flex flex-col gap-4 sm:flex-row">
+              <a
+                href="/roadmap"
+                className="inline-flex items-center justify-center rounded-full bg-primary px-8 py-4 font-mono text-xs font-semibold uppercase text-on-primary shadow-glow transition-transform hover:scale-[1.02]"
+              >
+                Open Roadmap Page
+              </a>
+              <a
+                href="#community"
+                className="inline-flex items-center justify-center rounded-full border border-outline px-8 py-4 font-mono text-xs font-semibold uppercase text-on-surface transition-colors hover:bg-surface-container-low"
+              >
+                Get Notified for Future Events
+              </a>
             </div>
-            <a
-              href="#community"
-              className="inline-flex w-full items-center justify-center rounded-full bg-primary px-8 py-3 font-mono text-xs font-semibold uppercase text-on-primary transition-transform hover:scale-[1.02] sm:w-auto"
-            >
-              Join Waitlist
-            </a>
           </div>
 
-          <div className="flex min-w-full flex-col justify-center bg-surface-bright p-8 lg:min-w-[360px] lg:p-12">
-            <h3 className="mb-6 font-mono text-xs font-semibold uppercase text-outline">
-              What's Included
+          <div className="grid gap-4 rounded-[28px] bg-surface-container-low p-6">
+            <h3 className="font-mono text-xs font-semibold uppercase tracking-[0.24em] text-outline">
+              What the roadmap includes
             </h3>
             <ul className="space-y-4">
               {included.map((item) => (
                 <li key={item} className="flex items-start gap-3">
-                  <Icon name="check_circle" filled className="text-xl text-primary" />
+                  <Icon name="flag" filled className="mt-0.5 text-xl text-primary" />
                   <span className="text-base leading-6 text-on-surface">{item}</span>
                 </li>
               ))}
@@ -567,10 +706,9 @@ function Instructor() {
             DevOps Engineer · AWS Certified Instructor
           </p>
           <p className="max-w-2xl text-base leading-7 text-on-surface-variant">
-            I build and maintain cloud infrastructure for a living. I created OnlyDevOps because I was
-            tired of seeing bootcamps teach outdated, isolated tools without explaining how they fit
-            together in real production environments. My goal is to teach you how to think like a systems
-            architect, not just how to copy-paste commands.
+            I build and maintain cloud infrastructure for a living. I created OnlyDevOps because I was tired
+            of seeing bootcamps teach isolated tools without showing how they connect in production. My goal
+            is to help learners think like operators and systems engineers.
           </p>
         </div>
       </div>
@@ -578,20 +716,20 @@ function Instructor() {
   );
 }
 
-function Community() {
+function Community({ roadmap = false }) {
   return (
     <section id="community" className="border-y border-outline-variant/30 bg-surface-container py-20">
       <div className="mx-auto flex max-w-content flex-col items-start justify-between gap-8 px-4 md:flex-row md:items-center md:px-16">
         <div>
-          <p className="mb-3 font-mono text-xs font-semibold uppercase text-primary">
-            Community Access
-          </p>
+          <p className="mb-3 font-mono text-xs font-semibold uppercase text-primary">Community Access</p>
           <h2 className="font-headline text-4xl font-bold text-on-surface">
-            Learn with engineers who are building every week.
+            {roadmap
+              ? "Want the full roadmap with projects, labs, and next steps?"
+              : "Learn with engineers who are building every week."}
           </h2>
         </div>
         <a
-          href="mailto:hello@onlydevops.com"
+          href="mailto:hello@onlydevops.in"
           className="inline-flex shrink-0 items-center justify-center rounded-full bg-primary px-8 py-4 font-mono text-xs font-semibold uppercase text-on-primary shadow-glow transition-transform hover:scale-[1.02]"
         >
           Request Invite
@@ -606,7 +744,7 @@ function Footer() {
     <footer className="border-t border-outline-variant/20 bg-surface py-16">
       <div className="mx-auto flex max-w-content flex-col items-center justify-between gap-6 px-4 md:flex-row md:px-16">
         <a
-          href="#top"
+          href="/"
           className="flex items-center gap-2 font-headline text-2xl font-extrabold text-on-surface transition-opacity hover:opacity-80"
         >
           <Icon name="terminal" filled className="text-primary" />
@@ -619,7 +757,7 @@ function Footer() {
           {footerLinks.map((link) => (
             <a
               key={link}
-              href="#top"
+              href={link === "Roadmap" ? "/roadmap" : "/#top"}
               className="font-mono text-sm font-medium text-on-surface-variant transition-colors hover:text-primary"
             >
               {link}
@@ -631,8 +769,300 @@ function Footer() {
   );
 }
 
+function RoadmapHero() {
+  return (
+    <section className="relative overflow-hidden pb-16 pt-20 md:pb-24 md:pt-24">
+      <div className="hero-glow absolute inset-0 -z-10" />
+      <div className="mx-auto grid max-w-content gap-10 px-4 md:px-16 lg:grid-cols-[1.05fr_0.95fr] lg:items-center">
+        <div>
+          <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-primary/25 bg-primary/10 px-4 py-2 font-mono text-xs font-semibold uppercase tracking-[0.22em] text-primary">
+            <Icon name="explore" filled className="text-base" />
+            OnlyDevOps Roadmap
+          </div>
+          <h1 className="max-w-4xl font-headline text-5xl font-extrabold leading-tight text-on-surface sm:text-6xl lg:text-7xl">
+            Your visual
+            <span className="block text-primary">DevOps learning highway</span>
+          </h1>
+          <p className="mt-6 max-w-2xl text-lg leading-8 text-on-surface-variant">
+            Follow the road from Linux fundamentals to cloud infrastructure, GitOps, and observability.
+            Every flag marks a skill milestone. Every turn prepares you for the next production challenge.
+          </p>
+          <div className="mt-8 flex flex-col gap-4 sm:flex-row">
+            <a
+              href="#roadmap-track"
+              className="inline-flex items-center justify-center rounded-full bg-primary px-8 py-4 font-mono text-xs font-semibold uppercase text-on-primary shadow-glow transition-transform hover:scale-[1.02]"
+            >
+              View Full Roadmap
+            </a>
+            <a
+              href="/#community"
+              className="inline-flex items-center justify-center rounded-full border border-outline px-8 py-4 font-mono text-xs font-semibold uppercase text-on-surface transition-colors hover:bg-surface-container-low"
+            >
+              Join Community
+            </a>
+          </div>
+        </div>
+
+        <RoadmapPreviewCard />
+      </div>
+    </section>
+  );
+}
+
+function RoadmapPreviewCard() {
+  const previewSteps = [
+    ["01", "Linux + Networking"],
+    ["02", "Scripting + GitHub"],
+    ["03", "Docker"],
+    ["04", "CI/CD"],
+    ["05", "Kubernetes"],
+    ["06", "AWS + Terraform"],
+  ];
+
+  return (
+    <div className="glass-panel relative overflow-hidden rounded-[32px] border border-outline-variant/30 p-6 shadow-ambient md:p-8">
+      <div className="absolute inset-x-10 top-8 h-40 rounded-full bg-primary/10 blur-3xl" />
+      <svg
+        viewBox="0 0 520 380"
+        className="relative z-10 h-full w-full"
+        aria-hidden="true"
+        role="img"
+      >
+        <defs>
+          <linearGradient id="roadmapStroke" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stopColor="rgba(0, 108, 79, 0.95)" />
+            <stop offset="50%" stopColor="rgba(49, 107, 243, 0.85)" />
+            <stop offset="100%" stopColor="rgba(0, 108, 79, 0.95)" />
+          </linearGradient>
+        </defs>
+        <path
+          d="M42 318C112 318 126 246 188 246C256 246 258 128 332 128C396 128 416 54 480 54"
+          stroke="url(#roadmapStroke)"
+          strokeWidth="28"
+          strokeLinecap="round"
+          fill="none"
+          className="drop-shadow-[0_10px_28px_rgba(0,108,79,0.25)]"
+        />
+        <path
+          d="M42 318C112 318 126 246 188 246C256 246 258 128 332 128C396 128 416 54 480 54"
+          stroke="rgba(255,255,255,0.18)"
+          strokeWidth="4"
+          strokeDasharray="14 12"
+          strokeLinecap="round"
+          fill="none"
+        />
+        {[{ x: 58, y: 318 }, { x: 182, y: 246 }, { x: 328, y: 128 }, { x: 474, y: 54 }].map((point) => (
+          <g key={`${point.x}-${point.y}`}>
+            <circle cx={point.x} cy={point.y} r="20" fill="rgba(255,255,255,0.96)" />
+            <circle cx={point.x} cy={point.y} r="10" fill="rgba(0,108,79,0.95)" />
+          </g>
+        ))}
+        {[{ x: 58, y: 283 }, { x: 182, y: 211 }, { x: 328, y: 93 }, { x: 474, y: 19 }].map((point, index) => (
+          <g key={`flag-${index}`}>
+            <line x1={point.x} y1={point.y + 10} x2={point.x} y2={point.y + 42} stroke="rgba(19,27,46,0.52)" strokeWidth="5" strokeLinecap="round" />
+            <path d={`M ${point.x} ${point.y + 12} L ${point.x + 36} ${point.y + 22} L ${point.x} ${point.y + 34} Z`} fill="rgba(0,108,79,0.95)" />
+          </g>
+        ))}
+      </svg>
+      <div className="relative z-10 mt-6 grid gap-3 sm:grid-cols-2">
+        {previewSteps.map(([id, label]) => (
+          <div key={id} className="rounded-2xl border border-outline-variant/30 bg-surface-container-lowest/75 px-4 py-3">
+            <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.22em] text-primary">{id}</p>
+            <p className="mt-1 text-sm font-semibold text-on-surface">{label}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function RoadmapTrack() {
+  const [activeMilestone, setActiveMilestone] = useState(roadmapMilestones[0].title);
+
+  const selectedMilestone = useMemo(
+    () => roadmapMilestones.find((milestone) => milestone.title === activeMilestone) ?? roadmapMilestones[0],
+    [activeMilestone],
+  );
+
+  return (
+    <section id="roadmap-track" className="pb-24">
+      <div className="mx-auto max-w-content px-4 md:px-16">
+        <div className="mb-10 max-w-3xl">
+          <p className="mb-3 font-mono text-xs font-semibold uppercase tracking-[0.22em] text-primary">
+            Interactive learning route
+          </p>
+          <h2 className="font-headline text-4xl font-bold text-on-surface md:text-5xl">
+            Follow the road. Hover a flag. See what you unlock.
+          </h2>
+        </div>
+
+        <div className="grid gap-8 xl:grid-cols-[1.2fr_0.8fr] xl:items-start">
+          <div className="relative overflow-hidden rounded-[32px] border border-outline-variant/30 bg-surface-container-low/45 p-4 md:p-6">
+            <div className="absolute inset-y-0 left-1/2 hidden w-px -translate-x-1/2 bg-gradient-to-b from-primary/0 via-primary/30 to-primary/0 md:block" />
+            <div className="absolute left-1/2 top-10 hidden h-[calc(100%-5rem)] w-[280px] -translate-x-1/2 rounded-full bg-primary/10 blur-3xl md:block" />
+            <div className="relative z-10 space-y-5">
+              {roadmapMilestones.map((milestone, index) => (
+                <RoadmapMilestoneCard
+                  key={milestone.title}
+                  milestone={milestone}
+                  index={index}
+                  active={selectedMilestone.title === milestone.title}
+                  onHover={() => setActiveMilestone(milestone.title)}
+                />
+              ))}
+            </div>
+          </div>
+
+          <RoadmapDetails milestone={selectedMilestone} />
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function RoadmapMilestoneCard({ milestone, index, active, onHover }) {
+  const Logo = milestone.icon;
+  const reversed = index % 2 === 1;
+
+  return (
+    <div className={`md:flex ${reversed ? "md:justify-end" : "md:justify-start"}`}>
+      <article
+        tabIndex={0}
+        onMouseEnter={onHover}
+        onFocus={onHover}
+        onClick={onHover}
+        className={`roadmap-card group relative w-full rounded-[28px] border p-6 text-left shadow-ambient transition-all duration-300 md:w-[calc(50%-2rem)] ${
+          active
+            ? "border-primary bg-surface shadow-glow md:-translate-y-1"
+            : "border-outline-variant/30 bg-surface/90 hover:-translate-y-1 hover:border-primary/35"
+        }`}
+      >
+        <div className={`roadmap-anchor hidden md:flex ${reversed ? "roadmap-anchor-right" : "roadmap-anchor-left"}`}>
+          <span className="roadmap-node" />
+          <span className="roadmap-flag">
+            <Icon name="flag" filled className="text-sm text-on-primary" />
+          </span>
+        </div>
+
+        <div className={`absolute inset-0 rounded-[28px] bg-gradient-to-br ${milestone.color} opacity-70`} />
+        <div className="relative z-10">
+          <div className="mb-5 flex items-start justify-between gap-4">
+            <div>
+              <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.22em] text-primary">
+                {milestone.level}
+              </p>
+              <h3 className="mt-2 font-headline text-2xl font-bold text-on-surface">{milestone.subtitle}</h3>
+            </div>
+            <div className="flex size-16 shrink-0 items-center justify-center rounded-2xl border border-outline-variant/30 bg-surface-container-lowest/90 shadow-ambient">
+              <Logo aria-hidden="true" className="text-[38px]" style={{ color: milestone.iconColor }} />
+            </div>
+          </div>
+          <p className="text-base leading-7 text-on-surface-variant">{milestone.summary}</p>
+          <div className="mt-6 flex flex-wrap gap-3">
+            <span className="rounded-full border border-outline-variant/30 bg-surface-container-lowest/85 px-3 py-1 font-mono text-[11px] font-semibold uppercase tracking-[0.18em] text-on-surface-variant">
+              {milestone.duration}
+            </span>
+            <span className="rounded-full border border-primary/25 bg-primary/10 px-3 py-1 font-mono text-[11px] font-semibold uppercase tracking-[0.18em] text-primary">
+              {milestone.status}
+            </span>
+          </div>
+        </div>
+      </article>
+    </div>
+  );
+}
+
+function RoadmapDetails({ milestone }) {
+  const Logo = milestone.icon;
+
+  return (
+    <aside className="xl:sticky xl:top-28">
+      <div className="glass-panel overflow-hidden rounded-[32px] border border-outline-variant/30 p-6 shadow-ambient md:p-8">
+        <div className={`mb-6 rounded-[28px] bg-gradient-to-br ${milestone.color} p-6`}>
+          <div className="flex items-start justify-between gap-4">
+            <div>
+              <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.22em] text-primary">
+                {milestone.level}
+              </p>
+              <h3 className="mt-3 font-headline text-3xl font-bold text-on-surface">{milestone.title}</h3>
+              <p className="mt-2 text-base leading-7 text-on-surface-variant">{milestone.summary}</p>
+            </div>
+            <div className="flex size-20 shrink-0 items-center justify-center rounded-3xl border border-outline-variant/30 bg-surface-container-lowest/90 shadow-ambient">
+              <Logo aria-hidden="true" className="text-[48px]" style={{ color: milestone.iconColor }} />
+            </div>
+          </div>
+        </div>
+
+        <div className="space-y-6">
+          <div>
+            <p className="mb-3 font-mono text-xs font-semibold uppercase tracking-[0.22em] text-outline">
+              Milestone achievements
+            </p>
+            <ul className="space-y-3">
+              {milestone.achievements.map((achievement) => (
+                <li key={achievement} className="flex items-start gap-3">
+                  <Icon name="check_circle" filled className="mt-0.5 text-xl text-primary" />
+                  <span className="text-base leading-7 text-on-surface">{achievement}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <div>
+            <p className="mb-3 font-mono text-xs font-semibold uppercase tracking-[0.22em] text-outline">
+              Tool stack on this segment
+            </p>
+            <div className="flex flex-wrap gap-3">
+              {milestone.tools.map((tool) => (
+                <span
+                  key={tool}
+                  className="rounded-full border border-outline-variant/30 bg-surface-container-lowest/80 px-4 py-2 font-mono text-[11px] font-semibold uppercase tracking-[0.18em] text-on-surface-variant"
+                >
+                  {tool}
+                </span>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    </aside>
+  );
+}
+
+function LandingPage() {
+  return (
+    <>
+      <main>
+        <Hero />
+        <Stats />
+        <DevOpsTools />
+        <LearningPath />
+        <RoadmapCallout />
+        <Instructor />
+        <Community />
+      </main>
+      <Footer />
+    </>
+  );
+}
+
+function RoadmapPage() {
+  return (
+    <>
+      <main>
+        <RoadmapHero />
+        <Stats />
+        <RoadmapTrack />
+        <Community roadmap />
+      </main>
+      <Footer />
+    </>
+  );
+}
+
 export default function App() {
   const [theme, setTheme] = useState(getInitialTheme);
+  const pathname = getCurrentPath();
 
   useEffect(() => {
     const root = document.documentElement;
@@ -642,23 +1072,20 @@ export default function App() {
     window.localStorage.setItem("onlydevops-theme", theme);
   }, [theme]);
 
+  useEffect(() => {
+    document.title = isRoadmapPath(pathname)
+      ? "OnlyDevOps Roadmap - Visual DevOps Learning Highway"
+      : "OnlyDevOps - Learn DevOps The Real Way";
+  }, [pathname]);
+
   const toggleTheme = () => {
     setTheme((currentTheme) => (currentTheme === "dark" ? "light" : "dark"));
   };
 
   return (
     <div className="blueprint-grid min-h-screen bg-background text-on-surface transition-colors duration-300 selection:bg-primary-container selection:text-on-primary-container">
-      <Header theme={theme} onToggleTheme={toggleTheme} />
-      <main>
-        <Hero />
-        <Stats />
-        <DevOpsTools />
-        <LearningPath />
-        <Bootcamp />
-        <Instructor />
-        <Community />
-      </main>
-      <Footer />
+      <Header theme={theme} onToggleTheme={toggleTheme} pathname={pathname} />
+      {isRoadmapPath(pathname) ? <RoadmapPage /> : <LandingPage />}
     </div>
   );
 }

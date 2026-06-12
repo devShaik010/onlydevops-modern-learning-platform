@@ -134,6 +134,65 @@
     transform: perspective(1000px) rotateY(0deg) rotateX(0deg);
   }
 
+  .roadmap-card {
+    outline: none;
+  }
+
+  .roadmap-anchor {
+    position: absolute;
+    top: 50%;
+    width: 4rem;
+    align-items: center;
+    transform: translateY(-50%);
+  }
+
+  .roadmap-anchor-left {
+    right: -4rem;
+    justify-content: flex-start;
+  }
+
+  .roadmap-anchor-right {
+    left: -4rem;
+    flex-direction: row-reverse;
+    justify-content: flex-start;
+  }
+
+  .roadmap-anchor::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 0.5rem;
+    right: 0.5rem;
+    height: 2px;
+    background: linear-gradient(90deg, rgb(var(--color-primary) / 0.12), rgb(var(--color-primary) / 0.45), rgb(var(--color-primary) / 0.12));
+    transform: translateY(-50%);
+  }
+
+  .roadmap-node {
+    position: relative;
+    z-index: 1;
+    display: inline-flex;
+    width: 1rem;
+    height: 1rem;
+    border-radius: 999px;
+    background: rgb(var(--color-primary));
+    box-shadow: 0 0 0 6px rgb(var(--color-primary) / 0.15);
+  }
+
+  .roadmap-flag {
+    position: relative;
+    z-index: 1;
+    display: inline-flex;
+    margin-inline: 0.65rem;
+    width: 2rem;
+    height: 2rem;
+    align-items: center;
+    justify-content: center;
+    border-radius: 999px;
+    background: rgb(var(--color-primary));
+    box-shadow: 0 10px 24px rgb(var(--color-primary) / 0.2);
+  }
+
   @media (min-width: 1024px) {
     .terminal-tilt {
       transform: perspective(1000px) rotateY(-6deg) rotateX(3deg);
