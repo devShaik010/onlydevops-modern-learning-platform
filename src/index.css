@@ -134,6 +134,26 @@
     transform: perspective(1000px) rotateY(0deg) rotateX(0deg);
   }
 
+  .inspector-input {
+    width: 100%;
+    border-radius: 1rem;
+    border: 1px solid rgb(var(--color-outline-variant) / 0.9);
+    background: #ffffff;
+    padding: 0.875rem 1rem;
+    font-size: 0.95rem;
+    color: #0f172a;
+    outline: none;
+    transition:
+      border-color 150ms ease,
+      box-shadow 150ms ease,
+      background-color 150ms ease;
+  }
+
+  .inspector-input:focus {
+    border-color: #38bdf8;
+    box-shadow: 0 0 0 3px rgb(56 189 248 / 0.15);
+  }
+
   @media (min-width: 1024px) {
     .terminal-tilt {
       transform: perspective(1000px) rotateY(-6deg) rotateX(3deg);
