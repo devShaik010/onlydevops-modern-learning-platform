@@ -3,4 +3,13 @@ import { defineConfig } from "vite";
 
 export default defineConfig({
   plugins: [react()],
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          konva: ["konva", "react-konva"],
+        },
+      },
+    },
+  },
 });
