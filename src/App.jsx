@@ -1,4 +1,5 @@
-import { useEffect, useMemo, useState } from "react";
+import { Suspense, lazy, useEffect, useMemo, useState } from "react";
+const ArchitectureGeneratorPage = lazy(() => import("./features/diagram/ArchitectureGeneratorPage"));
 import {
   SiAnsible,
   SiArgo,
@@ -14,6 +15,7 @@ import {
 
 const navItems = [
   ["Roadmap", "/roadmap", true],
+  ["Architecture Lab", "/diagram-generator"],
   ["Learning Path", "/#learning-path"],
   ["Tools", "/#tools"],
   ["About", "/#about"],
@@ -94,7 +96,7 @@ const included = [
   "Community-ready next steps",
 ];
 
-const footerLinks = ["Roadmap", "Learning Path", "Mentors", "Status", "Support"];
+const footerLinks = ["Roadmap", "Architecture Lab", "Learning Path", "Mentors", "Status", "Support"];
 
 const roadmapMilestones = [
   {
@@ -235,6 +237,10 @@ function isRoadmapPath(pathname) {
   return normalizePath(pathname) === "/roadmap";
 }
 
+function isDiagramPath(pathname) {
+  return normalizePath(pathname) === "/diagram-generator";
+}
+
 function Icon({ name, className = "", filled = false }) {
   return (
     <span
@@ -272,13 +278,19 @@ function ThemeToggle({ theme, onToggle, compact = false }) {
 
 function Header({ theme, onToggleTheme, pathname }) {
   const [isOpen, setIsOpen] = useState(false);
+  const isLanding = !isRoadmapPath(pathname) && !isDiagramPath(pathname);
+  const communityHref = isLanding ? "#community" : "/#community";
 
   const isActiveLink = (href) => {
     if (href === "/roadmap") {
       return isRoadmapPath(pathname);
     }
 
-    return !isRoadmapPath(pathname) && href.startsWith("/#");
+    if (href === "/diagram-generator") {
+      return isDiagramPath(pathname);
+    }
+
+    return isLanding && href.startsWith("/#");
   };
 
   return (
@@ -316,7 +328,7 @@ function Header({ theme, onToggleTheme, pathname }) {
         <div className="flex items-center gap-3">
           <ThemeToggle theme={theme} onToggle={onToggleTheme} />
           <a
-            href={isRoadmapPath(pathname) ? "/#community" : "#community"}
+            href={communityHref}
             className="hidden rounded-full border border-primary px-6 py-2.5 font-mono text-xs font-semibold uppercase text-primary transition-all hover:bg-primary hover:text-on-primary md:inline-flex"
           >
             Join Community
@@ -355,7 +367,7 @@ function Header({ theme, onToggleTheme, pathname }) {
               </a>
             ))}
             <a
-              href={isRoadmapPath(pathname) ? "/#community" : "#community"}
+              href={communityHref}
               onClick={() => setIsOpen(false)}
               className="mt-2 inline-flex items-center justify-center rounded-full bg-primary px-6 py-3 font-mono text-xs font-semibold uppercase text-on-primary"
             >
@@ -692,6 +704,67 @@ function RoadmapCallout() {
   );
 }
 
+function ArchitectureLabCallout() {
+  return (
+    <section className="py-24">
+      <div className="mx-auto max-w-content px-4 md:px-16">
+        <div className="grid gap-8 rounded-[32px] border border-outline-variant/30 bg-surface p-8 shadow-ambient md:grid-cols-[0.9fr_1.1fr] md:p-12">
+          <div className="glass-panel rounded-[28px] border border-outline-variant/30 p-6 shadow-ambient">
+            <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-secondary/20 bg-secondary/10 px-3 py-1.5 font-mono text-xs font-semibold uppercase text-secondary">
+              <Icon name="deployed_code" filled className="text-base" />
+              New platform feature
+            </div>
+            <h2 className="font-headline text-4xl font-bold text-on-surface md:text-5xl">
+              Architecture Lab for DevOps diagrams.
+            </h2>
+            <p className="mt-4 text-base leading-8 text-on-surface-variant">
+              Build clean infrastructure diagrams on an interactive canvas. Add components, connect systems,
+              drag blocks, and export the final view as a shareable image.
+            </p>
+            <div className="mt-8 flex flex-col gap-4 sm:flex-row">
+              <a
+                href="/diagram-generator"
+                className="inline-flex items-center justify-center rounded-full bg-primary px-8 py-4 font-mono text-xs font-semibold uppercase text-on-primary shadow-glow transition-transform hover:scale-[1.02]"
+              >
+                Open Architecture Lab
+              </a>
+              <a
+                href="#community"
+                className="inline-flex items-center justify-center rounded-full border border-outline px-8 py-4 font-mono text-xs font-semibold uppercase text-on-surface transition-colors hover:bg-surface-container-low"
+              >
+                Request Early Access
+              </a>
+            </div>
+          </div>
+
+          <div className="grid gap-4 rounded-[28px] bg-surface-container-low p-6">
+            <h3 className="font-mono text-xs font-semibold uppercase tracking-[0.24em] text-outline">
+              Included in the lab
+            </h3>
+            <div className="grid gap-4 sm:grid-cols-2">
+              {[
+                "Canvas-based diagram editing",
+                "Selectable DevOps tool nodes",
+                "Connection flow lines",
+                "Node labels and tool switching",
+                "Starter deployment topology",
+                "PNG export for sharing",
+              ].map((item) => (
+                <div key={item} className="rounded-2xl border border-outline-variant/30 bg-surface-container-lowest/80 p-4">
+                  <div className="mb-3 inline-flex size-9 items-center justify-center rounded-2xl bg-primary/10 text-primary">
+                    <Icon name="check" filled className="text-base" />
+                  </div>
+                  <p className="text-base leading-6 text-on-surface">{item}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 function Instructor() {
   return (
     <section id="about" className="py-24">
@@ -757,7 +830,7 @@ function Footer() {
           {footerLinks.map((link) => (
             <a
               key={link}
-              href={link === "Roadmap" ? "/roadmap" : "/#top"}
+              href={link === "Roadmap" ? "/roadmap" : link === "Architecture Lab" ? "/diagram-generator" : "/#top"}
               className="font-mono text-sm font-medium text-on-surface-variant transition-colors hover:text-primary"
             >
               {link}
@@ -1038,6 +1111,7 @@ function LandingPage() {
         <DevOpsTools />
         <LearningPath />
         <RoadmapCallout />
+        <ArchitectureLabCallout />
         <Instructor />
         <Community />
       </main>
@@ -1060,6 +1134,30 @@ function RoadmapPage() {
   );
 }
 
+function ArchitecturePage() {
+  return (
+    <>
+      <Suspense
+        fallback={
+          <main className="mx-auto flex min-h-[60vh] max-w-content items-center justify-center px-4 md:px-16">
+            <div className="rounded-[28px] border border-outline-variant/30 bg-surface px-8 py-10 text-center shadow-ambient">
+              <p className="font-mono text-xs font-semibold uppercase tracking-[0.22em] text-primary">
+                Loading Architecture Lab
+              </p>
+              <p className="mt-3 text-base leading-7 text-on-surface-variant">
+                Preparing the interactive canvas and DevOps component library.
+              </p>
+            </div>
+          </main>
+        }
+      >
+        <ArchitectureGeneratorPage />
+      </Suspense>
+      <Footer />
+    </>
+  );
+}
+
 export default function App() {
   const [theme, setTheme] = useState(getInitialTheme);
   const pathname = getCurrentPath();
@@ -1075,7 +1173,9 @@ export default function App() {
   useEffect(() => {
     document.title = isRoadmapPath(pathname)
       ? "OnlyDevOps Roadmap - Visual DevOps Learning Highway"
-      : "OnlyDevOps - Learn DevOps The Real Way";
+      : isDiagramPath(pathname)
+        ? "OnlyDevOps Architecture Lab - Infrastructure Diagram Generator"
+        : "OnlyDevOps - Learn DevOps The Real Way";
   }, [pathname]);
 
   const toggleTheme = () => {
@@ -1085,7 +1185,13 @@ export default function App() {
   return (
     <div className="blueprint-grid min-h-screen bg-background text-on-surface transition-colors duration-300 selection:bg-primary-container selection:text-on-primary-container">
       <Header theme={theme} onToggleTheme={toggleTheme} pathname={pathname} />
-      {isRoadmapPath(pathname) ? <RoadmapPage /> : <LandingPage />}
+      {isRoadmapPath(pathname) ? (
+        <RoadmapPage />
+      ) : isDiagramPath(pathname) ? (
+        <ArchitecturePage />
+      ) : (
+        <LandingPage />
+      )}
     </div>
   );
 }
