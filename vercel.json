@@ -4,6 +4,14 @@
   "outputDirectory": "dist",
   "rewrites": [
     {
+      "source": "/roadmap",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/diagram-generator",
+      "destination": "/index.html"
+    },
+    {
       "source": "/designArchitecture",
       "destination": "/index.html"
     },
