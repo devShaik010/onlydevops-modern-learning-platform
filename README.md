@@ -1,6 +1,6 @@
 # OnlyDevOps Modern Learning Platform
 
-React, Vite, and Tailwind CSS implementation of the OnlyDevOps landing page.
+React, Vite, and Tailwind CSS implementation of the OnlyDevOps landing page and the Stitch-inspired architecture designer.
 
 ## Requirements
 
@@ -14,7 +14,15 @@ npm install
 npm run dev
 ```
 
-Open `http://127.0.0.1:5173/`.
+Open:
+- `http://127.0.0.1:5173/` for the landing page
+- `http://127.0.0.1:5173/designArchitecture` for the architecture designer
+
+## Tests
+
+```bash
+npm test
+```
 
 ## Build
 
@@ -32,10 +40,13 @@ This project is configured for Vercel.
 - Install command: `npm ci`
 - Build command: `npm run build`
 - Output directory: `dist`
+- SPA rewrites enabled for direct route loads such as `/designArchitecture`
 
 ## Project Structure
 
-- `src/App.jsx` - landing page sections and UI
-- `src/index.css` - Tailwind layers and custom design effects
-- `tailwind.config.js` - design tokens from the Stitch export
+- `src/App.jsx` - lightweight route switcher and document title handling
+- `src/HomePage.jsx` - OnlyDevOps landing page sections and UI
+- `src/pages/DesignArchitecturePage.jsx` - Stitch-inspired architecture canvas built with React Flow
+- `src/index.css` - Tailwind layers and shared component styling
+- `tailwind.config.js` - design tokens and theme extensions
 - `stitch-exports/` - original Stitch screen export for reference

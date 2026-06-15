@@ -1,5 +1,6 @@
 import { Suspense, lazy, useEffect, useMemo, useState } from "react";
 const ArchitectureGeneratorPage = lazy(() => import("./features/diagram/ArchitectureGeneratorPage"));
+import DesignArchitecturePage from "./pages/DesignArchitecturePage.jsx";
 import {
   SiAnsible,
   SiArgo,
@@ -15,6 +16,7 @@ import {
 
 const navItems = [
   ["Roadmap", "/roadmap", true],
+  ["Design Architecture", "/designArchitecture"],
   ["Architecture Lab", "/diagram-generator"],
   ["Learning Path", "/#learning-path"],
   ["Tools", "/#tools"],
@@ -241,6 +243,10 @@ function isDiagramPath(pathname) {
   return normalizePath(pathname) === "/diagram-generator";
 }
 
+function isDesignArchitecturePath(pathname) {
+  return normalizePath(pathname) === "/designArchitecture";
+}
+
 function Icon({ name, className = "", filled = false }) {
   return (
     <span
@@ -278,7 +284,7 @@ function ThemeToggle({ theme, onToggle, compact = false }) {
 
 function Header({ theme, onToggleTheme, pathname }) {
   const [isOpen, setIsOpen] = useState(false);
-  const isLanding = !isRoadmapPath(pathname) && !isDiagramPath(pathname);
+  const isLanding = !isRoadmapPath(pathname) && !isDiagramPath(pathname) && !isDesignArchitecturePath(pathname);
   const communityHref = isLanding ? "#community" : "/#community";
 
   const isActiveLink = (href) => {
@@ -288,6 +294,10 @@ function Header({ theme, onToggleTheme, pathname }) {
 
     if (href === "/diagram-generator") {
       return isDiagramPath(pathname);
+    }
+
+    if (href === "/designArchitecture") {
+      return isDesignArchitecturePath(pathname);
     }
 
     return isLanding && href.startsWith("/#");
@@ -1175,12 +1185,18 @@ export default function App() {
       ? "OnlyDevOps Roadmap - Visual DevOps Learning Highway"
       : isDiagramPath(pathname)
         ? "OnlyDevOps Architecture Lab - Infrastructure Diagram Generator"
-        : "OnlyDevOps - Learn DevOps The Real Way";
+        : isDesignArchitecturePath(pathname)
+          ? "OnlyDevOps | Design Architecture"
+          : "OnlyDevOps - Learn DevOps The Real Way";
   }, [pathname]);
 
   const toggleTheme = () => {
     setTheme((currentTheme) => (currentTheme === "dark" ? "light" : "dark"));
   };
+
+  if (isDesignArchitecturePath(pathname)) {
+    return <DesignArchitecturePage />;
+  }
 
   return (
     <div className="blueprint-grid min-h-screen bg-background text-on-surface transition-colors duration-300 selection:bg-primary-container selection:text-on-primary-container">

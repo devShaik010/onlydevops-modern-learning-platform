@@ -10,6 +10,14 @@
     {
       "source": "/diagram-generator",
       "destination": "/index.html"
+    },
+    {
+      "source": "/designArchitecture",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
     }
   ]
 }
